@@ -1,0 +1,11 @@
+# The mathlib-free part of pzfc: no dependencies.  Same toolchain as the
+# mathlib part (`lean-toolchain`), so the mathlib part can import these modules.
+#
+#   cd lean && lake build
+name = "pzfc"
+defaultTargets = ["PZFC"]
+
+[[lean_lib]]
+name = "PZFC"
+roots = ["Pzfc", "Invariants", "Principles", "Grades", "Cardinals", "Axioms", "Socks",
+  "Glue", "Shapes", "Supports", "Contexts", "Scheme", "Kinds", "Values", "Instances", "Over", "Symmetric", "Local", "Records", "Circumstances", "Individuation", "Network", "Modal", "Protocols", "Exchange", "Spectrum", "Traces", "Worlds"]

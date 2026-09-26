@@ -1,0 +1,71 @@
+# The Mathlib-dependent part of pzfc (classical logic).
+# Pinned to the Mathlib revision whose build cache exists on the author's machine.
+#
+#   cd lean-mathlib && lake exe cache get && lake build
+#
+# It requires the mathlib-free part (`../lean`, same toolchain), so its files can import it.
+name = "pzfc-mathlib"
+defaultTargets = ["Weights", "WeightedGlue", "WeightedKind", "RandomChoice", "Observe", "Views", "Processes", "Askable", "Sources", "Fate", "Kill", "Sandwich", "Window", "Envelope", "Corner", "Stabilize", "Closure", "WorldsStable"]
+
+[[require]]
+name = "pzfc"
+path = "../lean"
+
+[[require]]
+name = "mathlib"
+git = "https://github.com/leanprover-community/mathlib4"
+rev = "51e6992efd06126df61a496bebf8f49482a4e129"
+
+[[lean_lib]]
+name = "Weights"
+
+[[lean_lib]]
+name = "WeightedGlue"
+
+[[lean_lib]]
+name = "WeightedKind"
+
+[[lean_lib]]
+name = "RandomChoice"
+
+[[lean_lib]]
+name = "Observe"
+
+[[lean_lib]]
+name = "Views"
+
+[[lean_lib]]
+name = "Processes"
+
+[[lean_lib]]
+name = "Askable"
+
+[[lean_lib]]
+name = "Sources"
+
+[[lean_lib]]
+name = "Fate"
+
+[[lean_lib]]
+name = "Kill"
+
+[[lean_lib]]
+name = "Sandwich"
+
+[[lean_lib]]
+name = "Window"
+
+[[lean_lib]]
+name = "Envelope"
+
+[[lean_lib]]
+name = "Corner"
+
+[[lean_lib]]
+name = "Stabilize"
+
+[[lean_lib]]
+name = "Closure"
+
+[[lean_lib]]
+name = "WorldsStable"

@@ -1,0 +1,1073 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true,linkcolor=blue!60!black,citecolor=blue!60!black,urlcolor=blue!60!black}
+\usepackage{xcolor}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{question}[theorem]{Question}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\newcommand{\B}{\mathsf{B}}
+\newcommand{\Bm}{\mathsf{B}^{-}}
+\newcommand{\Bp}{\mathsf{B}^{+}}
+\newcommand{\ZFC}{\mathsf{ZFC}}
+\newcommand{\GLU}{\mathrm{GLU}}
+\newcommand{\Hw}{H(\omega_1)}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Alt}{\mathrm{Alt}}
+\newcommand{\amh}{\mathrm{amh}}
+\newcommand{\zh}{\mathrm{zh}}
+\newcommand{\NB}{\mathrm{NB}}
+\newcommand{\lean}[1]{\texttt{#1}}
+\newcommand{\status}[1]{\textsf{[#1]}}
+\newcommand{\note}[1]{\textsf{(n#1)}}
+
+\title{Removing Global Gluing:\\
+A Multiverse Base with a Global Countable Core,\\
+Probability and Processes without a Global Context}
+\author{Xinyu Yang\\[2pt]
+\small ORCID: \href{https://orcid.org/0009-0007-2600-0948}{0009-0007-2600-0948}\\
+\small \href{mailto:Xinyu.Yang@apich.org}{Xinyu.Yang@apich.org} (work) \quad
+\href{mailto:Pana.Yang@hotmail.com}{Pana.Yang@hotmail.com}}
+\date{Internal draft, September 2026}
+
+\begin{document}
+\sloppy
+\maketitle
+
+\begin{abstract}
+Kolmogorov's probability, $\ZFC$ and the Church--Turing thesis share a tacit principle: compatible local data glue uniquely into a global object in a single global context. We drop this principle and make its failure measurable. The base theory $\B$ describes a family of $\ZFC$ worlds under forcing and rank extensions, without amalgamation, with one strong axiom: the countable core is invariant under extension. We determine its strength, classify global and local mathematics, prove a stabilization theorem that classifies $\ZFC$-independent statements, and compute the ordinal cost of amalgamating worlds. On this base, probability takes laws as global and samples as local, and processes are studied through the circumstances of questioning. For partially exchangeable processes the hidden global parameters are exactly asymptotic rates, present iff synchronization is scale-free, and we prove rigidity in the complementary regime for broad classes of synchronizations.
+\end{abstract}
+
+\tableofcontents
+
+%======================================================================
+\section{Introduction}\label{sec:intro}
+
+\subsection{The wall and the principle behind it}
+
+In machine learning, theoretical computer science and the foundations of physics, one meets the same obstruction. Once a description stops presupposing a single global context---one universe of sets, one sample space, one time line, one scalar objective---it seems to become \emph{indescribable}.
+\begin{itemize}
+\item Reward-free, memory-organizing continual learners have no scalar metric, and reintroducing one reintroduces the abandoned objective.
+\item Relational physics must decide what a theory predicts, evolution or structure.
+\item Experiment and theory are locked in a loop: triggers are designed from predictions, predictions from triggered data.
+\end{itemize}
+
+We call the common tacit principle $\GLU_0$: \emph{there is a single global context, and in it compatible local data glue uniquely into a global object.} It has four clauses:
+\begin{enumerate}
+\item uniqueness;
+\item determinate existence;
+\item well-founded shape;
+\item non-unique existence, i.e.\ choice.
+\end{enumerate}
+Its instances include Kolmogorov's extension theorem~\cite{Kolmogorov33}, extensionality plus power set in $\ZFC$~\cite{Jech03}, hidden-variable models~\cite{Bell64}, and ``the state at the next step'' of a mechanism~\cite{Gandy80}. $\GLU_0$ can live on three layers \note{58}:
+
+\begin{center}\small
+\begin{tabular}{p{0.3\textwidth}p{0.3\textwidth}p{0.3\textwidth}}
+\toprule
+Layer & In $\ZFC$ / Kolmogorov & In the base $\B$ below\\
+\midrule
+Objects (completed totalities, choice objects, sample spaces) & global & local\\
+Descriptions of nature (families of laws on contexts) & forced to glue & glue only when they glue\\
+Mathematical possibility (do all worlds amalgamate?) & one universe & possibilities converge ($\mathrm{S4.2}$), objects need not\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\noindent The walls in the motivating fields sit on the first two layers.
+
+\subsection{Goals}
+The goals fixed at the outset were:
+\begin{enumerate}[label=(R\arabic*)]
+\item make ``a global model exists'' a proposition that can be false, and measure how false it is;
+\item use a measurement-centred language in which the set-theoretic apparatus sits at the top;
+\item recover $\ZFC$ and standard measure theory where appropriate;
+\item explain, and where possible decide, statements that $\ZFC$ cannot decide;
+\item keep the axioms interpretable;
+\item replace linear time, absolute causation, reductionism and scalar objectives by statements with precise ranges of validity.
+\end{enumerate}
+
+\subsection{Results in brief}
+\begin{itemize}
+\item \textbf{Base} (\S\ref{sec:base}). $\B$ is a set theory of worlds and extensions without amalgamation. Its axiom M4 says literally that \emph{records are not disturbed by later recording}.
+  \begin{itemize}
+  \item The bottom layer consists of countable records, which are global; the top layer of completed totalities and choice objects, which are local; the two are connected by recording, i.e.\ extension.
+  \item Strength: three tiers $\Bm\subset\B\subset\Bp$.
+  \item Global and local mathematics are classified; facts glue while existence does not; globality comes in three strict levels.
+  \item The failure of amalgamation is measured by an ordinal, computed exactly.
+  \end{itemize}
+\item \textbf{Stabilization} (\S\ref{sec:stab}). A question with finitely many changes of answer along a recording system is a finite Boolean combination of persistent answers. Under confluence it has a unique limit.
+  \begin{itemize}
+  \item This extends Ershov's hierarchy from linear to branching time.
+  \item It classifies $\ZFC$-independent statements into four kinds.
+  \end{itemize}
+\item \textbf{Probability} (\S\ref{sec:prob}). Laws are global and samples local; events are descriptions.
+  \begin{itemize}
+  \item A family of laws on contexts has a global law iff it can be realized consistently; the obstruction is finite and arithmetic.
+  \item The fate of old point sets under extension is determined.
+  \end{itemize}
+\item \textbf{Processes} (\S\ref{sec:process}).
+  \begin{itemize}
+  \item Records are exactly the public and undisturbed behaviours.
+  \item The cost of hiding a failure equals the number of residual behaviours.
+  \item Facts see structure, not position; linear time is an index of individuation.
+  \item De Finetti and Bell are two ends of one theorem.
+  \item The hidden global parameters of partially exchangeable processes are exactly asymptotic rates, present iff synchronization is scale-free.
+  \end{itemize}
+\item \textbf{Rigidity} (\S\ref{sec:rigidity}). There are no other hidden parameters for broad classes of synchronizations:
+  \begin{itemize}
+  \item concave envelopes, including the critical case;
+  \item arbitrary windows of bounded ratio;
+  \item all i.i.d.\ random windows;
+  \item spikes and plateaus;
+  \item three chains with any synchronization graph.
+  \end{itemize}
+\item \textbf{A conservative language layer} (\S\ref{sec:glu}). The gluing scheme $\GLU(\pi)$ adds kinds of objects with non-classical value, shape and context. It is conservative over $\ZFC$. Choice, excluded middle and Kolmogorov's theorem become theorems whose validity depends on the parameter.
+\item \textbf{Readings} (\S\ref{sec:readings}). The results translate into precise statements about triggers in physics, scalar metrics in machine learning, and computation as stabilization.
+\item \textbf{Contributions} (\S\ref{sec:contrib}). What is new against prior work, why it matters, and what it offers the applied sciences in expression, tools and understanding.
+\end{itemize}
+
+\paragraph{A unifying shape.} Separately proved results share one form. The \emph{global} content of a situation is what is invariant under all individuations:
+\begin{itemize}
+\item under all worlds, it is the countable core;
+\item under all positions, it is the structure;
+\item under all linearizations, it is the trace together with the rates.
+\end{itemize}
+The classical demands---one universe, one evolution, one sample space, one scalar---are each a demand to make a choice.
+
+\paragraph{Conventions.} Each claim carries a status tag:
+\begin{itemize}
+\item \status{known}: a known result placed in our setting;
+\item \status{new}: a result of this work;
+\item \status{new org.}: known ingredients organized in a new way.
+\end{itemize}
+References of the form \note{97} point to the working notes described in \S\ref{sec:method}.
+
+%======================================================================
+\section{The base theory}\label{sec:base}
+
+\subsection{Language and axioms}
+
+There are two sorts, \emph{sets} and \emph{worlds}, and three primitive relations:
+\begin{itemize}
+\item $x\in y$;
+\item $x\mathrel{\varepsilon}w$: the set $x$ is in the world $w$;
+\item $u\preccurlyeq v$: the world $v$ extends $u$.
+\end{itemize}
+We write $w\models\varphi$ for $\varphi$ relativized to $w$.
+
+\begin{description}[leftmargin=2.2em]
+\item[M1] Every world is transitive and satisfies $\ZFC$; every set lies in some world. By transitivity all worlds share $\omega$ and the hereditarily finite sets (\emph{$\omega$-standardness}).
+\item[M2] $\preccurlyeq$ is generated by two kinds of step:
+  \begin{itemize}
+  \item \emph{width}: $u\preccurlyeq u[G]$ for a generic $G$;
+  \item \emph{height}: $u\preccurlyeq v$ when $u=V^v_\alpha$.
+  \end{itemize}
+  M2a$'$: intermediate models of width steps are worlds.
+\item[M3] Every world has a $P$-generic extension for each poset $P$ in it, and a proper height extension.
+\item[M4] For $u\preccurlyeq v$ and parameters $a\in\Hw^u$: $\Hw^u\models\varphi(a)\iff\Hw^v\models\varphi(a)$.
+\item[M4$^+$] The same with $L(\R)$ and real parameters.
+\end{description}
+No amalgamation (common extension of two worlds) and no world containing all worlds are assumed. This is the precise sense in which $\GLU_0$ is dropped. Worlds are not sets, so there is no outer universe inside the theory. We set $\Bm=\text{M1--M3}$, $\B=\text{M1--M4}$ and $\Bp=\B+\text{M4}^+$.
+
+\begin{remark}[Reading of M4]
+Forcing adds a record, a reading of a source that the world could not answer. M4 is the principle ``statements about existing records are not disturbed by later recording'', applied to the countable core \note{53}. Recording is thus a primitive relation of the base, and the measurement-centred language of goal (R2) is realized as extension between worlds rather than as a probabilistic replacement of~$\in$.
+\end{remark}
+
+\subsection{Strength}
+
+\begin{theorem}[Strength]\label{thm:strength}
+\leavevmode
+\begin{enumerate}
+\item M4 holds iff every world satisfies two-step projective generic absoluteness $\mathrm{PGA}_2$. \status{new, routine}
+\item $\B$ is equiconsistent with $\ZFC$ plus infinitely many strong cardinals~\cite{Kanamori03}. \status{known}
+  \begin{itemize}
+  \item Lower bound: Hauser~\cite{Hauser95}.
+  \item Upper bound: Woodin showed that $n$ strong cardinals give two-step $\Sigma^1_{n+3}$ absoluteness after a collapse (see~\cite{Wilson18}); compactness then finishes.
+  \end{itemize}
+\item M4 implies that every set has a sharp, that every $\Sigma^1_2$ set is universally Baire \cite{FMW92,Wilson17}, and hence $V\ne L$ in every world. M4 does not imply $\mathrm{PD}$: the global layer contains statements that are global yet independent. \status{known ingredients}
+\item $\Bp$ proves $\mathrm{AD}^{L(\R)}$ in every world. A proper class of Woodin cardinals gives a model; at least an iterable inner model with $\omega$ Woodin cardinals is required~\cite{Steel04,Larson04}. \status{known}
+\item $\Bm$ requires only enough transitive models, roughly a proper class of worldly cardinals (below one inaccessible).
+\end{enumerate}
+All large-cardinal strength comes from M4.
+\end{theorem}
+
+\begin{remark}
+The results relevant to the original goal need only $\Bm$ or a single world. These are:
+\begin{itemize}
+\item the global/local classification, the modal logic, coexistence and amalgamation;
+\item all probability and process results.
+\end{itemize}
+M4 is needed exactly where ``everything definable from reals is regular'' is used (Theorem~\ref{thm:projmeas}, and the two-valued fate of definable records).
+\end{remark}
+
+\subsection{Global and local mathematics}
+
+A statement is \emph{global} if its truth is the same in all worlds that contain its parameters.
+
+\begin{theorem}[\status{known facts~\cite{Jech03,BartoszynskiJudah95}, new org.}; \note{55}, \note{57}]\label{thm:globallocal}
+\leavevmode
+\begin{enumerate}
+\item \emph{Size.} Countability is persistent, and every set becomes countable in some extension. Hence countability (and finiteness) are the only global size facts.
+\item \emph{Totalities.} For infinite $x$, some extension adds a subset of $x$. So $\mathcal P(x)$, $\R$ and $2^\omega$ are local. This is $\GLU_0$ at infinity.
+\item \emph{Choice.} For a given family, a choice function persists. But choice objects lose their defining property in extensions:
+  \begin{itemize}
+  \item a Cohen real splits every old infinite set, so an old ultrafilter is no longer an ultrafilter;
+  \item an old Vitali set misses the class of a new real;
+  \item an old well-order of $\R$ omits the new reals.
+  \end{itemize}
+  Choice holds in each world, but what it chooses is not global.
+\item \emph{$\sigma$-algebras.} As families of point sets they are local; as algebras of codes they are global.
+\item \emph{Laws.} Borel codes and their measures are absolute~\cite{Solovay70,Shoenfield61}, so laws are global. Random points over $w$ are not in $w$, so samples exist only in extensions. Kolmogorov's framework is the special case ``fix one world''.
+\item \emph{CH} can be forced both ways over every world. It is local: it asks about a completed totality.
+\end{enumerate}
+\end{theorem}
+
+\begin{theorem}[Limit and records; \note{59}, \note{44}]\label{thm:limit}
+Along a chain of worlds in which every set is eventually collapsed:
+\begin{itemize}
+\item the countable cores form an elementary chain;
+\item their union is a model of $\ZFC^-$ with collection in which every set is countable (the theory $T_0$ of an earlier formulation);
+\item in this limit, choice holds and every set of reals is null.
+\end{itemize}
+Moreover, M4 implies the ``staging principle'' (C): for every real $a$, $L[a]\cap\R$ is countable.
+\end{theorem}
+
+\begin{theorem}[Regularity; \note{95}]\label{thm:projmeas}
+In $\B+$M2$a'$, in every world every projective set with real parameters is Lebesgue measurable and has the Baire property. \status{new, standard argument}
+\end{theorem}
+\begin{proof}[Sketch]
+\begin{enumerate}
+\item Take the Boolean value of $\varphi(\dot r,a)$ in the random algebra of $w$; it is a Borel code $b$.
+\item Collapse the continuum of $w$. In the collapse, every real random over $w$ generates an intermediate world, which by M4 agrees with the collapse.
+\item So in the collapse the symmetric difference of the set and $b$ is contained in the non-random reals, hence null.
+\item This is a projective statement, so M4 brings it back to $w$.
+\end{enumerate}
+\end{proof}
+
+\subsection{Modal structure and the two borderlines}
+
+\begin{theorem}[\status{known}~\cite{HamkinsLowe08,HamkinsLinnebo,Hamkins12}; \note{56}, \note{57}, \note{71}]
+The modal logic of extension, for sentences with parameters, is $\mathrm{S4.2}$: objects diverge, possibilities converge. The notes also argue that this persists when width and height steps are combined (this combination is not in the literature).
+\end{theorem}
+
+Two borderlines organize the global structure \note{71}, \note{72}:
+\begin{itemize}
+\item \emph{Well-foundedness governs possibility.} Non-well-founded top extensions give $\mathrm{S4}$~\cite{HamkinsWoodinUFS,HamkinsLinnebo}. Along such extensions the countable core is unchanged, so the modal logic on the core is trivial and all forks act above the countable core \note{76}.
+\item \emph{$\omega$-standardness governs the finite layer.} Records, frequencies and contextuality are the same in all worlds. The price is a height obstruction between worlds.
+\end{itemize}
+The height obstruction is not removed by non-well-founded $\omega$-models.
+
+\begin{theorem}[\note{71}]
+If $N$ is an $\omega$-model of $\ZFC$ containing reals $x,y$, then the well-founded part of $N$ has height $>\omega_1^{x\oplus y}$.
+\end{theorem}
+
+\noindent In the non-well-founded variant D (which allows top extensions): with M4, $0^\#$ freezes the theory of $L$, and $\Sigma_1$ assertions converge in a collapse. Without M4, the principle $.2$ fails from worlds satisfying $V=L$. With M4, $.2$ holds on the frozen and $\Sigma_1$ fragments \note{101}, \note{104}.
+
+\subsection{Coexistence and levels of globality}
+
+\begin{theorem}[\status{new}; \note{81}, \note{74}, \note{86}, \note{89}]\label{thm:coexist}
+\leavevmode
+\begin{enumerate}
+\item \emph{Every coexistence pattern occurs.} Let $c_1,\dots,c_n$ be mutually generic Cohen reals over $w$ and $K$ a simplicial complex on $\{1,\dots,n\}$ containing all singletons. There is a model of $\B$ in which $\{c_i:i\in F\}$ lie in a common world iff $F\in K$.
+\item \emph{The only constraint is closure under definability}: if $b$ is definable from $a$ by a code in the core, every world containing $a$ contains $b$.
+\item \emph{Facts glue, existence does not.} $\Delta_0$ facts about finitely many sets are the same in all worlds containing them. The global $\in$ satisfies extensionality and foundation, but $\B$ has no global pairing. This is dual to contextuality: coexistence without sharing versus sharing without coexistence.
+\item \emph{Amalgamation is independent of $\B$} (non-amalgamable Cohen extensions go back to Mostowski; see~\cite{HHKVW}). There are sparse models with sets that never coexist, and directed models in which all worlds amalgamate. Adding amalgamation restores $\GLU_0$ at the level of objects.
+\item \emph{Three strict levels}: $\B\subsetneq\B+\text{global pairing}\subsetneq\B+\text{amalgamation}$.
+  \begin{itemize}
+  \item Under amalgamation, the global sets form a $T_0$ universe.
+  \item The classical single universe contradicts M3 and returns in no strengthening.
+  \end{itemize}
+\end{enumerate}
+\end{theorem}
+
+\begin{theorem}[Absorption; \note{95}, \note{96}]
+Suppose a world $w$ has a height extension $N$ with a Woodin cardinal above $o(w)$, and $N$ is iterable in the outer universe. Then any two generic extensions of $w$ have a common extension, at a greater height. \status{known technique: generic iteration}
+\end{theorem}
+
+\noindent So in the natural interpretation, world-level non-gluing is a same-height phenomenon, and $\B$ is realism about countable sets.
+
+\subsection{The amalgamation height}\label{sec:amh}
+
+For worlds $w_1,w_2$, let $\amh(w_1,w_2)$ be the least height of a transitive $\ZFC$ model containing both.
+
+\begin{theorem}[\status{new}; \note{119}]\label{thm:amh}
+If $w=L_\alpha[A]$ with $A\subseteq\alpha$ and $A\in w$, then
+\[\amh(w[c],w[d])=\min\{\beta\ge\alpha:L_\beta[A,c,d]\models\ZFC\}.\]
+\end{theorem}
+\begin{proof}
+If $M\supseteq w[c]\cup w[d]$ has height $\beta$, then $L^M[A,c,d]=L_\beta[A,c,d]\models\ZFC$ and $\beta\ge\alpha$. Conversely, $L_\beta[A,c,d]$ contains $w$ and $c,d$, hence every valuation of names from $w$.
+\end{proof}
+
+\begin{corollary}
+\leavevmode
+\begin{enumerate}
+\item Same-height amalgamation holds iff $L_\alpha[A,c,d]\models\ZFC$. Mutually generic pairs amalgamate at the same height; Mostowski-type pairs~\cite{HHKVW} do not.
+\item If $\omega_1^{c\oplus d}\ge\alpha$ and $A=\emptyset$, then $\amh$ is the least $\ZFC$-height of $L[c\oplus d]$, independent of $\alpha$.
+\item Over a countable $L_\alpha$, the heights for pairs of Cohen reals are unbounded in $\omega_1$ (take $d=c\oplus_{\mathrm{XOR}}z$).
+\end{enumerate}
+\end{corollary}
+
+\noindent For general worlds \note{124}, $\amh$ lies between $\sup_{A\in w}\min\{\beta\ge\alpha:L_\beta[A,c\oplus d]\models\ZFC\}$ and $\min\{\beta:L_\beta(w\cup\{c,d\})\models\ZFC\}$. The earlier lower bound $\sup\omega_1^{x\oplus y}$ \note{71} is far weaker. The gap in the bracket disappears whenever $w$ is generated by a set parameter; ground-model definability~\cite{Laver07,FHR15} is the relevant tool for generic extensions of such worlds. World-level non-gluing is therefore measured by an ordinal, determined by the join of the information.
+
+%======================================================================
+\section{Stabilization along recording}\label{sec:stab}
+
+\begin{definition}
+\leavevmode
+\begin{itemize}
+\item A \emph{recording system} is a preorder $(W,\le)$, and a \emph{question} is a map $P:W\to\{0,1\}$.
+\item $\Alt(P,k,w)$ holds if some chain of extensions starting at $w$ changes the answer $k$ times. The \emph{change number} is $c(P,w)=\sup\{k:\Alt(P,k,w)\}$.
+\item A set $S$ is \emph{persistent} if it is closed upward. A persistent answer is a \emph{button}.
+\item The axiom $.2$ for $P$ is $\Diamond\Box(P=b)\to\Box\Diamond(P=b)$.
+\end{itemize}
+\end{definition}
+
+\begin{theorem}[Stabilization, \status{new}; Lean \lean{Stabilize}; \note{122}, \note{123}]\label{thm:stab}
+\leavevmode
+\begin{enumerate}
+\item If $P$ is determined by $n$ buttons, the number of possible changes is at most the number of unpushed buttons.
+\item \emph{(No confluence needed.)} Let $V_j=\{w:\neg\Alt(P,j,w)\}$ and let $Y_k$ be the upward closure of the stages where exactly $k$ changes remain and $P=1$.
+  \begin{itemize}
+  \item These sets are persistent.
+  \item At a stage with exactly $k$ remaining changes, $P=1$ iff the stage lies in $Y_k$.
+  \end{itemize}
+  So $c\le N$ makes $P$ a Boolean combination of $2N+2$ persistent sets.
+\item \emph{(Confluence.)} Under $.2$ the limit value is unique. If moreover $c(P,w_0)\le N$, then above $w_0$ the answer is the limit value flipped once for each remaining change: a combination of $N$ buttons and a constant.
+\end{enumerate}
+\end{theorem}
+
+\noindent On linear stages, (3) is Ershov's theorem that $n$-c.e.\ sets are Boolean combinations of c.e.\ sets~\cite{Ershov68,Ershov70}, with limits given by Shoenfield's limit lemma~\cite{Shoenfield59}; the same notion appears as limiting recursion and identification in the limit~\cite{Gold65,Putnam65,Gold67}. The theorem shows that linear time is inessential and confluence is what matters. Without confluence the ``limit'' is the persistent set $Y_0$, which records the path taken. Learning along non-exchangeable question trees is of this kind (\S\ref{sec:process}).
+
+\paragraph{Set theory.} Under extension, $.2$ holds~\cite{HamkinsLowe08}.
+\begin{itemize}
+\item M4 puts every core sentence at level 0 (Lean \lean{WorldsStable.core\_level\_zero}).
+\item Every finite level occurs. Take the ratchet $b_i=$``$\aleph^w_i$ is countable'' ($i\le n$) and let $\varphi_n$ say that an odd number of the $b_i$ hold; then $c(\varphi_n)=n$.
+\item Sentences forced both ways from every world, such as CH, are switches with $c=\infty$ (Lean \lean{WorldsStable.switch\_all\_levels}).
+\item Height steps can raise levels. ``There is an inaccessible'' is a negative button under width steps and a switch once height steps are added.
+\end{itemize}
+
+\begin{proposition}[Four kinds of independence, \status{new}]
+A $\ZFC$-independent sentence is, in $\B$, one of the following.
+\begin{enumerate}
+\item \emph{Decidable}: $\B$ decides it (e.g.\ ``every set has a sharp'').
+\item An \emph{oracle bit}: $\B\vdash\Box\varphi\vee\Box\neg\varphi$ without deciding $\varphi$ (e.g.\ $\mathrm{PD}$, which $\Bp$ decides).
+\item \emph{Limit-decidable}: finite change number, with a unique limit value supplied by recording.
+\item A \emph{switch}: no answer (e.g.\ CH).
+\end{enumerate}
+Their computational analogues are:
+\begin{enumerate}
+\item computable;
+\item computable in a fixed unknown oracle;
+\item a finite Ershov level;
+\item non-stabilizing.
+\end{enumerate}
+Strengthening axioms reads off oracle bits: this is the consistency-strength ladder.
+\end{proposition}
+
+%======================================================================
+\section{The probability layer}\label{sec:prob}
+
+\subsection{Laws, descriptions and samples}
+
+Recall the basic notions:
+\begin{itemize}
+\item a \emph{law} is a probability measure given by countable data;
+\item an \emph{event} is a \emph{description}, i.e.\ a Borel code (projective under M4);
+\item a \emph{fresh sample} over $w$ is a point, in an extension, that is random over $w$.
+\end{itemize}
+
+\begin{theorem}[\status{new org.}; \note{61}, \note{43}, \note{45}; Lean \lean{Askable}, \lean{Sources}]\label{thm:prob1}
+\leavevmode
+\begin{enumerate}
+\item \emph{Measure belongs to descriptions.}
+  \begin{itemize}
+  \item Measures of descriptions are invariant under extension.
+  \item Every local point set becomes null in some extension.
+  \item Non-measurability is local and temporary.
+  \item In the limit $T_0$, choice coexists with ``every set of reals is null''.
+  \end{itemize}
+\item \emph{Fresh samples} avoid every local point set almost surely; only descriptions can be hit.
+\item \emph{Independence is extension}: a second sample is fresh over the world containing the first.
+\item \emph{Askable questions.} A question can be answered to arbitrary precision by finitely many readings of a source iff it is measurable. In particular, every question about a record is askable.
+\item \emph{Records of sources.} (Independent rereading plays the role of Larsen--Skou testing~\cite{LarsenSkou91}.) A source has a record iff two independent readings agree on their first $n$ answers with probability bounded below uniformly in $n$. Hence records are the atoms, and atomless sources (continuous randomness) have laws but no records.
+\item ``A global model exists'' has two independent meanings: a global \emph{law} exists, or a global law \emph{has a record}. Each has its own measure of failure. Relations can be records while their ends are not: synchronous coupling makes ``equal'' certain without either side being a record.
+\end{enumerate}
+\end{theorem}
+
+\subsection{Contextual laws}
+
+\begin{theorem}[\status{new org.}, cf.~\cite{Abramsky11,Bell64}; \note{61}, \note{63}, \note{68}; Lean \lean{Records}, \lean{Exchange}]\label{thm:context}
+Consider a family of laws on overlapping contexts, compatible on overlaps.
+\begin{enumerate}
+\item It has a global law iff it has a realization agreeing on all overlaps with probability one. The maximal probability of agreement equals the noncontextual fraction.
+\item \emph{The obstruction is finite.} If no global law exists, there is $\eta>0$ such that every shared record table of any length deviates by at least $\eta$ on some context.
+\item The existence of a global law is arithmetic, hence the same in all worlds.
+\item Contextuality and amalgamation of worlds are independent in both directions.
+\end{enumerate}
+\end{theorem}
+
+\noindent There are thus two failures of gluing: one finite (values: contextuality) and one infinite (worlds: amalgamation height).
+
+\subsection{The fate of old point sets}
+
+\begin{theorem}[\status{new org./new}; \note{67}, \note{70}, \note{75}, \note{79}, \note{84}; Lean \lean{Fate}, \lean{Kill}]\label{thm:fate}
+Let $w\preccurlyeq w'$.
+\begin{enumerate}
+\item \emph{Duality.}
+  \begin{itemize}
+  \item If $w'$ contains a Cohen real over $w$, then $\R^w$ is null in $w'$.
+  \item If $w'$ contains a random real over $w$, then $\R^w$ is meagre in $w'$.
+  \item Random extensions preserve outer measure exactly; Cohen extensions preserve non-meagreness.
+  \item $\R^w$ is either null or of full outer measure in $w'$.
+  \end{itemize}
+\item \emph{Characterization.} A record of ideal type $I$ kills $A$ iff $A$ is $I$-a.e.\ covered by a Borel null family. Measure-carried ideals preserve outer measure exactly.
+\item \emph{Killing without Cohen reals.} An infinite set unsplit by the reals of $w$ (for instance a Mathias real~\cite{Mathias77}) kills all of $\R^w$. Every Mathias--Prikry forcing kills everything.
+\item \emph{Stratified sets.} For $A=\bigcup_i(\R^{v_i}\cap B_i)$ one has $\mu^*(A)^{w'}=\mu\big(\bigcup\{B_i:v_i\text{ not killed}\}\big)$. So intermediate values arise from which world a point comes from.
+\item \emph{Dichotomy.} For good records ($\Pi^1_1$-on-$\Sigma^1_1$ ideal forcings and their finite iterations), each old set's measure is either fully kept or entirely lost. In $\B$ this holds for every record definable from reals; partial loss requires parameters that are local choice objects.
+\item \emph{Window.} Either $\R^w$ is null in $w'$, or $\mu_*(A)^w\le\mu^*(A)^{w'}\le\mu^*(A)^w$. The uncertainty of measure is exactly non-measurability.
+\end{enumerate}
+\end{theorem}
+
+\begin{theorem}[Realized measure extensions; \note{100}, \note{105}]
+\leavevmode
+\begin{itemize}
+\item The effect of an extension on old point sets is a translation-invariant extension of Lebesgue measure, given by traces of new Borel sets.
+\item It takes only the values $0$ and $1$ on invariant sets.
+\item It is always \emph{separable}, so non-separable invariant extensions~\cite{KakutaniOxtoby50} are never realized.
+\item It grows monotonically along branches.
+\item Covering codes typical for a Borel measure cover only old null sets.
+\end{itemize}
+A strict interior value of the window arises iff a Szpilrajn-type extension~\cite{Szpilrajn35} is realized, for instance by selectively killing the reals of a smaller world.
+\end{theorem}
+
+\begin{theorem}[\note{107}]
+A real that guesses all ground finite sequences on intervals (for example, a Cohen real) kills $\R^v$ together with the reals of every random extension of $v$. Hence ``Cohen, then random'' does not realize an interior value; compare~\cite{Pawlikowski86}.
+\end{theorem}
+
+\begin{question}[Q$^{**}$; \note{109}--\note{118}]
+Let $m$ be Mathias over $v$ and $r$ random over $v[m]$. Is $\R^{v[r]}$ non-null in $v[m][r]$?
+\begin{itemize}
+\item Equivalently (using the decomposition of Mathias forcing~\cite{Mathias77} and Galvin--Prikry~\cite{GalvinPrikry73}): with $U$ the generic Ramsey ultrafilter, $V'=v[U]$ and $F$ the filter generated by $U$ in $V'[r]$, does Mathias--Prikry forcing $\mathbb{M}_F$ preserve positive outer measure of the ground reals?
+\item Known constraints:
+  \begin{itemize}
+  \item no guessing reals are added;
+  \item covers bounded by ground functions fail;
+  \item ground-coded measures and measures built from bounded tuples of $m$ cannot witness a positive answer via the Kakutani class~\cite{Kakutani48};
+  \item the literature on Mathias--Prikry forcing~\cite{HrusakMinami14} characterizes dominating and eventually different reals, not measure; $F$ is a non-meagre P-filter in Talagrand's sense~\cite{Talagrand80}.
+  \end{itemize}
+\item Conjecture: for non-meagre P-filters, killing happens only through the ``eventually constant along the generic'' mechanism; hence Q$^{**}$ holds.
+\end{itemize}
+\end{question}
+
+%======================================================================
+\section{The process layer}\label{sec:process}
+
+\subsection{Behaviours and the four circumstances}
+
+A \emph{behaviour} maps question histories (who asked what, in what order) to answers or answer laws. A classical \emph{record} is an answer invariant in four circumstances:
+\begin{itemize}
+\item asking again;
+\item who asks;
+\item what was asked before;
+\item what is asked together.
+\end{itemize}
+The classical foundations assume that every answer is a record.
+
+\begin{theorem}[\status{new org.}; \note{47}--\note{49}; Lean \lean{Circumstances}, \lean{Individuation}]\label{thm:circ}
+\leavevmode
+\begin{enumerate}
+\item A behaviour has a record model iff it is public and undisturbed.
+\item Hidden-state models always exist, and the minimal number of hidden states is the number of residual behaviours (a Myhill--Nerode form~\cite{Myhill57,Nerode58}). The \emph{degree of failure} is what a classical description must invent.
+\item The four failures are pairwise independent.
+\item \emph{Facts see structure, not position.} Two behaviours have the same invariant facts iff they have the same residual behaviours.
+  \begin{itemize}
+  \item For undisturbed behaviours, facts determine everything.
+  \item Two flip-memories have the same facts yet differ.
+  \item Position is a fact iff no other residual behaviour can do the same things. In particular, it is a fact when disturbance is irreversible.
+  \end{itemize}
+\item \emph{Prediction} is the task that fixes each answer: structure plus position. Relational tasks are not predictions.
+\item \emph{Individuation.} Writing the circumstance into the question gives every behaviour a record model; this is needed only when the behaviour is not public or is disturbed.
+  \begin{itemize}
+  \item Linear time is the index that individuates repeated asking.
+  \item ``Who asks'' has the same form. Two objects' facts through viewpoints coincide iff their sets of viewpoints coincide, and which viewpoint one occupies is not a fact.
+  \end{itemize}
+\end{enumerate}
+\end{theorem}
+
+\begin{theorem}[Evaluation; \note{53}; Lean \lean{Circumstances}]
+An evaluation that can be redone at any time gives a behaviour the same value as anything it can become. For an irreversibly changing system it therefore sees only the terminal structure; seeing present ability requires individuation by time, which cannot be redone. For recurrent systems there is no such trade-off.
+\end{theorem}
+
+\begin{theorem}[Networks; \note{51}; Lean \lean{Network}]
+With at least two askers, a public and non-interfering behaviour is undisturbed, hence has a record model. In a public world, disturbance appears as interference.
+\end{theorem}
+
+\subsection{Order, time and learning}
+
+\begin{theorem}[\note{62}, \note{63}; Lean \lean{Protocols}]
+\leavevmode
+\begin{enumerate}
+\item The future of a behaviour is independent of question order iff questions pairwise commute. Undisturbed behaviours commute. Recorded answers and future behaviour give two independent kinds of order dependence.
+\item A mixture of records read freshly is order-independent (the P\'olya urn is the example; cf.\ de Finetti~\cite{deFinetti37,HewittSavage55}). Hence order-dependent behaviours are not hidden records read freshly.
+\item Along a non-commuting question tree, each path is a classical martingale; unasked branches are never revealed; the learning limit depends on the strategy. Only in the exchangeable case is the limit strategy-independent.
+\end{enumerate}
+\end{theorem}
+
+\subsection{Partial exchangeability, de Finetti and Bell}
+
+Let the alphabet be partitioned into classes that commute with each other.
+
+\begin{theorem}[\status{new}; \note{65}; Lean \lean{Exchange}]\label{thm:repr}
+\leavevmode
+\begin{enumerate}
+\item Two words have the same trace iff they have the same stream in every class. A trace is a tuple of streams; a word is a schedule together with the streams.
+\item A law is trace-exchangeable iff it is a random tuple of streams interleaved by an exchangeable schedule. Given the streams, the schedule is uniform over permutations with the given counts.
+\item \emph{Who decides which stream to read.}
+  \begin{itemize}
+  \item The process itself: arbitrary streams interleaved by an exchangeable schedule; de Finetti and arbitrary processes are the two ends.
+  \item The position: Diaconis--Freedman~\cite{DiaconisFreedman80}.
+  \item The askers: the trace law is exchangeable iff classes do not signal. A hidden global structure exists iff $\GLU$ holds; it always exists when at most one class has a choice, and may fail with two (PR boxes~\cite{PopescuRohrlich94}).
+  \end{itemize}
+  De Finetti and Bell are the two ends of one theorem.
+\end{enumerate}
+\end{theorem}
+
+\begin{theorem}[Order spectrum; \note{66}; Lean \lean{Spectrum}]
+Let a behaviour be class-exchangeable.
+\begin{enumerate}
+\item The future depends only on within-class order, and every tuple of within-class orders is realized. The order spectrum is the image of the group of within-class permutations, and this upper bound is attained.
+\item Every model reaches distinct states for distinct spectrum members: states $\ge$ residuals $\ge|\mathrm{Spec}|$.
+\item Under uniformly random order, the within-class orders are independent and uniform, so order entropy adds over classes.
+\item Order sensitivity satisfies a triangle inequality and is Lipschitz in within-class Kendall distance.
+\item Coarse-graining preserves exchangeability and only shrinks the spectrum. An order-independent metric cannot detect whether the evaluated system is order-independent.
+\end{enumerate}
+\end{theorem}
+
+\subsection{General independence and hidden rates}
+
+For a general independence relation, traces are Mazurkiewicz traces~\cite{Mazurkiewicz77,DiekertRozenberg95} and the dependence graph has components.
+
+\begin{theorem}[\note{69}, \note{73}; Lean \lean{Traces}]
+\leavevmode
+\begin{enumerate}
+\item Trace-exchangeability reduces to the components of the dependence graph: components are interleaved by an i.i.d.\ schedule given rates, and each component stream is invariant under swapping adjacent independent letters.
+\item Infinite traces almost surely have no maximal element.
+\item Every central exhaustive linearization is a mixture of: a rate vector $\pi$ on components; after finite time, i.i.d.\ interleaving at rates $\pi$; and fresh local shuffles.
+\item \emph{Within a component}, every surviving rate vector of the chains yields an extreme central linearization, and distinct rates yield distinct ones. Under geometric synchronization a whole interval of rates survives, so finite incomparability does not imply rigidity.
+\item Infinitely many complete cuts, or uniformly bounded incomparability, imply rigidity.
+\end{enumerate}
+\end{theorem}
+
+Consider two chains synchronized at checkpoints: at the $k$-th checkpoint the position difference must lie in a window of width $W_k$, and $P_k$ is the elapsed time. Put $\rho_k=W_k/P_k$.
+
+\begin{theorem}[Hidden rates, \status{new}; \note{83}, \note{88}]\label{thm:rates}
+\leavevmode
+\begin{enumerate}
+\item If $\liminf\rho>0$, the surviving rates form a non-degenerate interval: there is a continuous hidden rate.
+\item If $\liminf\rho=0$, only the rate $\tfrac12$ survives.
+\item \emph{Learning.}
+  \begin{itemize}
+  \item Counts (the trace) are sufficient.
+  \item The posterior is consistent.
+  \item $\sqrt n(i_n/n-p)\Rightarrow N(0,p(1-p))$, exactly as without synchronization.
+  \end{itemize}
+  Synchronization decides whether rates exist, not how precisely they are learned.
+\item \emph{Several chains.} Connected and dense synchronization gives unique rates. Scale-invariant edges give an open rate polytope, whose dimension is the number of hidden parameters \note{108}.
+\end{enumerate}
+\end{theorem}
+
+%======================================================================
+\section{Rigidity}\label{sec:rigidity}
+
+\emph{Rigidity} means that no hidden parameters exist beyond the trace, i.e.\ the central linearization is unique. It is the complementary question to Theorem~\ref{thm:rates}.
+
+\subsection{Reduction to a killed walk}
+
+\begin{theorem}[\note{78}, \note{93}, \note{94}; Lean \lean{Sandwich}]\label{thm:reduction}
+\leavevmode
+\begin{enumerate}
+\item The one-step checkpoint kernel is explicit (Chu--Vandermonde): $K_k(t,t')=\binom{f(k+1)+f(k)+1-t+t'}{f(k+1)}$.
+\item \emph{One-dimensional reduction.} After a gauge change the checkpoint process is the \emph{checkpoint chain}
+  \[D_{k+1}=D_k+W_{k+1}-\NB(W_{k+1},\tfrac12),\]
+  killed outside $[1,W_{k+1}]$. In ``X-time'' this is a zero-mean walk with variance $2W$ per checkpoint, and the gap equals the window.
+\item Its kernels are totally positive (TP$_2$)~\cite{KarlinRinott80}. Hence the Birkhoff projective diameter~\cite{Birkhoff57} of a block equals the log cross-ratio of the four corners.
+\item \emph{Four equivalent forms.} Rigidity $\iff$ $\Delta(M_{K\to L})\to0$ for every $K$ $\iff$ the corner cross-ratio tends to $1$ $\iff$ the survival-conditioned laws from the bottom and top corners merge in ratio distance.
+\item It suffices to find disjoint blocks with $\sum_je^{-\Delta_j/2}=\infty$ (Birkhoff contraction).
+\item \emph{Plateau theorem.} Constant windows $W_j$ on plateaus of length at least $m(W_j)$ give rigidity, even with unbounded incomparability; numerically $m(W)=O(W)$.
+\end{enumerate}
+\end{theorem}
+
+\subsection{The phase transition}
+
+\begin{theorem}[\status{new}; \note{97}, \note{98}, \note{108}]\label{thm:phase}
+If the windows have a concave envelope (up to $O(\sqrt W)$), then rigidity holds iff $\rho\to0$. This includes the critical case $\omega\asymp P/\log P$ and oscillating $W^2/P$. Combined with Theorem~\ref{thm:rates}: \emph{the hidden parameters are exactly the rates, and rates exist exactly when synchronization has no characteristic scale.}
+\end{theorem}
+
+\noindent\emph{Proof architecture.}
+\begin{itemize}
+\item A three-block sandwich reduces the diameter to entrance, middle and exit estimates (Lean \lean{Sandwich}).
+\item \emph{Slowly varying windows} ($W^2=O(P)$) use:
+  \begin{itemize}
+  \item an embedding into X-time;
+  \item a ruin bound for monitoring only at checkpoints (dip-and-return);
+  \item pinned local lower bounds and tubes along lines (a uniform local limit theorem for non-identical steps~\cite{Petrov75});
+  \item a piecewise exponential tilt changing only at checkpoints, whose cost is controlled by the total variation of slopes.
+  \end{itemize}
+\item \emph{Wide windows} use the corner formula, the Holley inequality~\cite{Holley74} for rows, an exact constant tilt, and a boundary layer at the top corner.
+\item The general concave case chooses good non-doubling scales via the tangent intercept $b(P)=\omega-P\omega'$.
+\end{itemize}
+
+\subsection{Irregular windows}
+
+\begin{theorem}[\status{new}; \note{109}, \note{117}, \note{123}, \note{124}]\label{thm:irregular}
+\leavevmode
+\begin{enumerate}
+\item \emph{Bottlenecks.} The one-step diameter has an explicit formula; $\sum_ke^{-\Delta(q_k)/2}=\infty$ implies rigidity for any windows. For example, double bottlenecks, or logarithmically small windows, occurring infinitely often suffice.
+\item \emph{Bounded ratio.} If infinitely many runs of $\lceil\Theta W\rceil$ checkpoints have $W\le W_j\le\Gamma W$ ($\Gamma$ fixed, $W$ the minimum on the run), the heap is rigid, whatever the shape of the windows.
+\item \emph{Random windows.} All windows $\omega_jU_j$ with $U_j$ i.i.d.\ and bounded are almost surely rigid.
+\item \emph{Spikes and plateaus.} Let the windows between two levels $\le\Gamma W$ rise to a plateau of X-time $T\ge\eta^2W^2$ with all windows $\ge C\sqrt T$. Then the kernel across the plateau has bounded diameter. Arbitrarily high spikes therefore act as resets and help rigidity.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}[Key steps of (2)]
+\emph{Envelope.} Take the lower Lipschitz envelope $\hat\omega_t=\min_j(W_j+C_0|t-j|)$ with $C_0=1+\Gamma/\eta^2$. Runs of checkpoints more than $\eta W$ above $\hat\omega$ are shorter than $2\eta^2W$ (Lean \lean{Envelope.run\_bound}). After piecewise-linear smoothing, $\hat\omega$ is a tilted envelope with bounded tilt cost and with contacts every $O(\eta^2W)$ checkpoints.
+
+\emph{Upper bound.} Survival from depth $\delta$ is at most $C(\delta+\ell)/W$ with $\ell=2\eta W$. This follows from counting how often a coarse chain visits the region above $2\ell$ (arcsine law); each visit costs a constant killing probability.
+
+\emph{Entrance ratio.} Stop at the first time $\sigma$ the walk is $\ell$ deep.
+\begin{itemize}
+\item Harris--FKG~\cite{Harris60,FKG71} bounds the survivors that stay shallow: survival is decreasing and ``stay above'' is increasing.
+\item A last-passage decomposition bounds the expected depth.
+\end{itemize}
+The short-time survival factor then appears in numerator and denominator and \emph{cancels}. The floor is never reached before $\sigma$.
+\end{proof}
+
+\noindent\emph{Proof of (4).} The kernel is squeezed between $\tfrac12q_T$ and $q_T$, where $q_T$ is the half-line kernel, which has product form $\asymp(x\vee\sqrt g)(y\vee\sqrt g)/T^{3/2}$. The factor $\tfrac12$ holds because the bridge rarely exceeds $C\sqrt T$ (Lean \lean{Closure.plateau\_cross}).
+
+\noindent Recursively, a proof of rigidity can fail only for ``fractal'' window profiles, stuck at every scale between the reset and the bounded-ratio regimes.
+
+\subsection{Several chains}
+
+The state is the vector of differences along a spanning tree of the synchronization graph, and the window is a polytope.
+
+\begin{theorem}[\note{109}, \note{110}, \note{112}, \note{116}, \note{123}]\label{thm:multi}
+\leavevmode
+\begin{enumerate}
+\item \emph{Exact decomposition} (three chains on a path): $D^1=U-D^2/2$, where $U$ and the $(2,3)$-shuffle are independent. \emph{Strong scale separation} ($W^2\lesssim\sqrt{W^1}$) reduces to the one-dimensional theorems, recursively for paths and trees.
+\item Plateau and contraction criteria are insensitive to dimension.
+\item \emph{Three chains at comparable scales, any synchronization graph} (path or triangle) are rigid.
+  \begin{itemize}
+  \item After whitening, the unit steps are three vectors at $120^\circ$, and the window is a parallelogram or hexagon with $60^\circ$ and $120^\circ$ corners.
+  \item At $60^\circ$ corners $h=xy(x+y)$ is an \emph{exact} martingale of the sampled chain for every gap (Lean \lean{Corner}).
+  \item At $120^\circ$ corners $r^{3/2}\sin(3\theta/2)$ is harmonic up to relative error $O(1/|x|)$, by induction over dyadic annuli; the third cumulant of a sum of $c$ steps grows like $c$. (This follows the harmonic-function method of Denisov--Wachtel~\cite{DenisovWachtel15}, whose asymptotic results are not needed.)
+  \end{itemize}
+\item \emph{Weyl chamber} \status{known}~\cite{KOR02}. For $m$ chains the all-low corner is $\{x_1>\dots>x_m\}$, and the Vandermonde product is exactly harmonic (Lean for $m=4$). Mixed corners for $m\ge4$ are polyhedral cones with dihedral angles $60^\circ,90^\circ,120^\circ$; only the $120^\circ$ edges are singular.
+\end{enumerate}
+\end{theorem}
+
+\paragraph{Numerics.}
+\begin{itemize}
+\item Block diameters were computed for regular, random, multiscale, spiked and oscillating windows and for three- and four-chain synchronizations (triangle included); all are bounded and decreasing.
+\item Entrance ratios lie in $[0.29,0.49]$ uniformly for $K\le400$.
+\item The martingale defect at $60^\circ$ corners is exactly $0$; at $120^\circ$ corners, the relative error times $|x|$ is $\approx0.14$ for both gaps.
+\end{itemize}
+
+%======================================================================
+\section{The gluing scheme: a conservative language layer}\label{sec:glu}
+
+Before arriving at $\B$, the project built a scheme in which $\GLU_0$ is relaxed parameter by parameter. It is conservative over $\ZFC$ and remains a language for objects outside the classical wall.
+
+\paragraph{Parameters.} A piece of local data has three aspects, $\pi=(W,S,\mathcal C)$:
+\begin{itemize}
+\item its \emph{value} $W$: a sharp yes/no, or a weight, possibly with names;
+\item its \emph{shape} $S$: well-founded, or arbitrary;
+\item its \emph{context} $\mathcal C$: a small category whose arrows are refinements and whose automorphisms are symmetries.
+\end{itemize}
+The classical origin is $\pi_0=(\text{sharp},\text{well-founded},\text{point})$.
+
+\paragraph{The scheme.} $\GLU(\pi)$ states that the kind $U_\pi$ is the terminal object among small $\pi$-systems:
+\begin{itemize}
+\item every small $\pi$-system has exactly one solution;
+\item every object is the image of some node.
+\end{itemize}
+First-order form: images are solutions; every object is an image; images agree iff a $\pi$-bisimulation connects the nodes. For shapes this is Aczel's anti-foundation~\cite{Aczel88}. At the origin, $\GLU(\pi_0)$ is clauses 1--3 of $\GLU_0$. Clause 4 (choice) is asserted only at the origin.
+
+\begin{theorem}[\status{new org.}; \note{24}--\note{41}; Lean \lean{Shapes}, \lean{Kinds}, \lean{Values}, \lean{Instances}, \lean{Over}, \lean{Symmetric}, \lean{Contexts}, \lean{Weights}, \lean{WeightedGlue}, \lean{WeightedKind}, \lean{RandomChoice}]
+\leavevmode
+\begin{enumerate}
+\item \emph{Construction and conservativity.}
+  \begin{itemize}
+  \item Every $U_\pi$ is built from records as pointed small systems modulo $\pi$-bisimulation, so it is unique up to isomorphism.
+  \item Adding $\GLU(\pi)$ proves no new statement about records.
+  \item Constructed in Lean: anti-founded shapes; context kinds over arbitrary small categories with names; value kinds over every complete value structure (using only \texttt{Quot.sound}); values over preordered contexts.
+  \end{itemize}
+\item \emph{Identity} is $\pi$-bisimulation. It reduces to extensionality on well-founded shapes, and to having a common image (Larsen--Skou bisimulation~\cite{LarsenSkou91}) for weights. Two shapes cannot share one membership relation, so extension proceeds by adding kinds.
+\item \emph{Logic.} Excluded middle holds exactly where a context cannot be refined further; double negation holds everywhere. With extensional identification, choice forces excluded middle (Diaconescu~\cite{Diaconescu75}).
+\item \emph{Choice criterion.}
+  \begin{itemize}
+  \item Local selections glue when there is a root, without using choice.
+  \item On disjoint contexts they glue exactly when classical choice holds.
+  \item Common refinements and symmetries can block gluing.
+  \item On preorders, local existence always glues iff every connected component has a least context.
+  \end{itemize}
+\item \emph{Existence is local.} There are global objects with members in every context but no global member (refinement and symmetry forms). In particular, Russell's pair of socks is a global object with no global sock.
+\item \emph{Random choice without the axiom of choice.} ``A random sock'' is a global object whose weight is forced by symmetry to be $\tfrac12$ (and $\tfrac1n$ for $n$ symmetric nodes).
+\item \emph{Weights.} Existence is the shadow of weight, and shadows forget multiplicity. On directed contexts the weighted layer is Kolmogorov's theorem: global weights are unique and independent local weights glue to products. Refinement forces the value algebra $\R_{\ge0}$, and regularity of a measure is exactly the survival of additivity.
+\item \emph{Origin inside every kind.}
+  \begin{itemize}
+  \item Along $W$ and $\mathcal C$ there is an embedding and a shadow, whose composite is the identity: extension is refinement.
+  \item Along $S$ there is no shadow: cyclic objects cannot be flattened into well-founded ones, so linear time cannot be recovered by forgetting.
+  \end{itemize}
+\end{enumerate}
+\end{theorem}
+
+\begin{theorem}[Computation and processes as objects; \note{39}, \note{40}; Lean \lean{Local}, \lean{Observe}, \lean{Views}, \lean{Processes}]
+\leavevmode
+\begin{enumerate}
+\item Gandy's principles for mechanisms~\cite{Gandy80} are $\GLU$ at the origin.
+\item Deterministic local algorithms see only objects, and cannot elect a leader in a symmetric system~\cite{Angluin80,YamashitaKameda96}.
+\item What they see depends on the value structure: sets versus counts~\cite{Hella15}.
+\item Coins break symmetry~\cite{ItaiRodeh90}.
+\item On finite systems, two nodes are the same object iff every deterministic local algorithm keeps them in the same state (views stabilize to Larsen--Skou bisimulation).
+\item \emph{Processes.} Without observation all Markov processes are one object. With stopping as observation, stopping probabilities are properties of the object and are preserved by merging. Objects are finer than stopping laws: they remember when randomness was decided. Cyclic symmetry forces the uniform law.
+\end{enumerate}
+\end{theorem}
+
+%======================================================================
+\section{Readings for physics, machine learning and computation}\label{sec:readings}
+
+These are precise statements placed in the motivating problems. They are not physical theories, benchmarks or architectures.
+
+\subsection{Physics}
+\begin{itemize}
+\item \emph{Structure versus evolution.} An evolution is structure plus an individuation of position. Position is a fact only where disturbance is irreversible.
+\item \emph{Hidden variables.} A hidden global structure exists iff local laws glue. De Finetti and Bell are the two ends of this one theorem, and the failure $\eta$ is finite and world-independent.
+\item \emph{Emergent rates.} Clocks synchronized only at events have relative rates as their only global parameters beyond causal order. These rates are determined iff $\rho\to0$.
+\item \emph{Interference.} In a public world, disturbance appears as interference.
+\end{itemize}
+
+\begin{proposition}[Triggers; \status{known: Solovay tests~\cite{DowneyHirschfeldt10}}; Lean \lean{Closure.trigger\_blind}]
+Let triggers $T_n$ be coded in $w$ with $\sum\mu(T_n)<\infty$. A phenomenon random over $w$ lies in only finitely many $T_n$.
+\end{proposition}
+
+\noindent Rare-event triggers designed within a theory therefore confirm only what the theory can describe. A phenomenon fresh relative to the theory is caught at positive frequency only by theory-independent sampling.
+
+\subsection{Machine learning}
+\begin{itemize}
+\item Redoable evaluations see only terminal structure, so continual learning faces a genuine trade-off.
+\item Order spectra and order entropy are non-scalar invariants.
+\item The cost of hiding order dependence is at least the size of the order spectrum.
+\item Autoregression is the choice of a linear individuation. For partially exchangeable streams, the global parameters to learn are the dependence graph, the per-component laws, and rates only under scale-free synchronization.
+\end{itemize}
+
+\begin{proposition}[\status{known~\cite{Szpilrajn30,DushnikMiller41,Debreu54}}; Lean \lean{Closure.le\_iff\_all\_linear\_ext}]
+Order learners by inclusion of the facts they maintain.
+\begin{enumerate}
+\item A faithful scalar metric exists only if this order is total.
+\item The order is the intersection of its linear extensions.
+\item The least number of scalars representing it is its order dimension.
+\end{enumerate}
+\end{proposition}
+
+\noindent ``Give one number'' asks for a choice of linear extension, and ``one number cannot measure intelligence'' notes that this choice is not determined by the facts. The content common to all admissible rankings is the partial order. The earliest tools of the project were consistent with this view: the contextual fraction, Hodge decomposition of rankings, and the Blackwell order.
+
+\subsection{Computation}
+\begin{enumerate}
+\item \emph{Stabilization along recording} (\S\ref{sec:stab}). Turing computability, limit computability~\cite{Gold65,Putnam65} and generic absoluteness are one notion at three levels, and it requires confluence, not linear time. In this reading, $\ZFC$-independence is non-convergence of answers along recording.
+\item \emph{Minimal hiding.} A machine hides history-dependence in state, and its minimal size is the number of residuals. Zielonka's theorem~\cite{Zielonka87} glues global trace behaviour from local components. The rate theorems identify the only non-local asymptotic parameters.
+\item \emph{Gluing parameters.} Values, symmetry and context determine which tasks local mechanisms can solve.
+\end{enumerate}
+
+%======================================================================
+\section{Contributions and significance}\label{sec:contrib}
+
+Much of the material rests on a large body of prior work. We therefore state separately what is contributed and what is only re-used.
+
+\subsection{What is new, measured against prior work}
+
+\paragraph{Foundations.}
+\emph{Prior work} includes:
+\begin{itemize}
+\item the set-theoretic and generic multiverse~\cite{Hamkins12,Steel04};
+\item the modal logic of forcing and potentialism~\cite{HamkinsLowe08,HamkinsLinnebo};
+\item generic absoluteness and its strength~\cite{FMW92,Hauser95,Larson04,Wilson17};
+\item non-amalgamable extensions~\cite{HHKVW};
+\item set-theoretic geology~\cite{FHR15}.
+\end{itemize}
+
+\noindent \emph{Our contribution:}
+\begin{enumerate}
+\item A two-sorted axiomatization $\B$ derived from one principle---records are not disturbed by later recording. We give its strength in three tiers and use the global/local classification as the organizing theorem of a foundation. The mathematical strength of $\B$ coincides with known generic absoluteness; the novelty here is the role these facts play, not the facts.
+\item The coexistence theorem (every simplicial complex is realized) and the strict three-level hierarchy of globality.
+\item The exact amalgamation height, a new measure of world-level non-gluing.
+\item Stabilization theorems for arbitrary recording systems. These extend Ershov's hierarchy~\cite{Ershov68} from linear time to confluent branching time, and without confluence give a $2N+2$ representation.
+\item The resulting four-way classification of $\ZFC$-independent statements: decidable, oracle bit, limit-decidable, switch.
+\end{enumerate}
+
+\paragraph{Probability.}
+\emph{Prior work} includes:
+\begin{itemize}
+\item forcing and measure~\cite{Solovay70,BartoszynskiJudah95};
+\item Mathias-type forcing~\cite{Mathias77,HrusakMinami14};
+\item invariant extensions of Lebesgue measure~\cite{Szpilrajn35,KakutaniOxtoby50};
+\item contextuality~\cite{Abramsky11}.
+\end{itemize}
+
+\noindent \emph{Our contribution:}
+\begin{enumerate}
+\item Laws global and samples local, as theorems of the base.
+\item Askability equals measurability, and records of sources are characterized by rereading.
+\item The contextual obstruction is finite and arithmetic, and independent of the amalgamation of worlds.
+\item A characterization of the fate of old point sets: duality, the ideal-covering criterion, the stratified formula, two-valuedness for definable records, and the window.
+\item Separability and monotonicity of realized measure extensions.
+\item A reduction of the remaining question Q$^{**}$ to Mathias--Prikry forcing over a random extension.
+\end{enumerate}
+
+\paragraph{Processes.}
+\emph{Prior work} includes:
+\begin{itemize}
+\item exchangeability~\cite{deFinetti37,HewittSavage55,DiaconisFreedman80};
+\item traces~\cite{Mazurkiewicz77,DiekertRozenberg95};
+\item minimal automata~\cite{Myhill57,Nerode58};
+\item Bell-type non-locality~\cite{Bell64,PopescuRohrlich94}.
+\end{itemize}
+
+\noindent \emph{Our contribution} is a single framework---the four circumstances of asking---in which the following are proved:
+\begin{enumerate}
+\item records are exactly the public and undisturbed behaviours;
+\item the cost of hiding a failure is the number of residual behaviours;
+\item facts determine structure but not position, and linear time is an index of individuation;
+\item de Finetti and Bell are the two ends of one gluing theorem;
+\item the order spectrum is quantitatively described;
+\item trace-exchangeable processes are represented for general independence relations;
+\item hidden rates undergo a phase transition, and the learning theory of rates is given.
+\end{enumerate}
+
+\paragraph{Random walks killed at checkpoints.} These are, to our knowledge, the most substantial new theorems.
+\begin{enumerate}
+\item The rigidity phase transition (Theorem~\ref{thm:phase}).
+\item Rigidity for arbitrary windows of bounded ratio, through two devices introduced here: the lower Lipschitz envelope, and the cancellation of short-time survival in entrance ratios.
+\item Rigidity for all i.i.d.\ random windows.
+\item Spikes and plateaus act as resets.
+\item Rigidity for three chains with any synchronization graph.
+\end{enumerate}
+The tools---Birkhoff contraction~\cite{Birkhoff57}, total positivity~\cite{KarlinRinott80}, Holley and FKG inequalities~\cite{Holley74,FKG71}, and cone harmonic functions~\cite{DenisovWachtel15,KOR02}---are classical. Their combination and the results are new.
+
+\paragraph{The gluing scheme.}
+\emph{Prior work} includes anti-foundation~\cite{Aczel88}, probabilistic bisimulation~\cite{LarsenSkou91}, sheaf-theoretic contextuality~\cite{Abramsky11}, and anonymous distributed computing~\cite{Angluin80,YamashitaKameda96,Hella15}.
+
+\noindent \emph{Our contribution} is one parametrized, conservative scheme covering value, shape and context, with:
+\begin{itemize}
+\item a proved criterion for when local choices glue on preorders;
+\item embeddings and shadows of the classical origin;
+\item Gandy's principles~\cite{Gandy80} identified as the origin of the scheme;
+\item machine-checked constructions.
+\end{itemize}
+
+\paragraph{Formalization.} About 636 machine-checked theorems in Lean~4 cover the finite parts, with an axiom profile that tracks where choice is used.
+
+\subsection{Significance}
+\begin{itemize}
+\item \emph{For foundations.}
+  \begin{itemize}
+  \item ``A global model exists'' becomes a graded, measurable proposition. Its failure is finite for values (contextuality), counted by hidden states for processes, a window for measure, and an ordinal for worlds.
+  \item Independence is explained rather than merely exhibited. CH is undecidable because it is local (a switch). PD is a global oracle bit that only stronger axioms read off. Some independent statements have canonical limit values supplied by recording itself.
+  \end{itemize}
+\item \emph{For probability.} Kolmogorov's framework is recovered as the special case of a fixed world. Sample spaces and non-measurable sets are local, and events are descriptions. This removes the tension between choice and measure: in the limit of $\B$, choice holds and every set of reals is null.
+\item \emph{For process theory.} The question ``what is hidden behind a partially commuting process?'' has a precise answer: the trace, and rates exactly when synchronization has no characteristic scale.
+\item \emph{For computation.} Stabilization, not linear time, is the notion behind decidability-in-the-limit. Confluence is exactly what is needed for answers to have a unique limit.
+\end{itemize}
+
+\subsection{Contributions to the applied sciences}
+The applied value lies in precise problem statements, computable quantities and explanations, not in new physical theories, benchmarks or architectures.
+
+\paragraph{Expression.} The work supplies a vocabulary with exact definitions for describing systems without a global context:
+\begin{itemize}
+\item the four circumstances of asking;
+\item records versus sources;
+\item structure versus position;
+\item traces and rates in place of a single time line;
+\item global versus local quantities;
+\item the partial order of maintained facts in place of a scalar score.
+\end{itemize}
+
+\paragraph{Tools.} Each of the following quantities can be computed for a concrete system:
+\begin{enumerate}
+\item the \emph{cost of hiding}: the minimal number of hidden states needed for a classical model;
+\item the \emph{noncontextual fraction} $\eta$ of a family of observations;
+\item the \emph{order spectrum and order entropy} of a learner or process;
+\item the \emph{order dimension} of a task family, which is the number of metrics needed to compare systems faithfully;
+\item the \emph{stabilization level} of a question under a recording protocol, which says whether the answer converges and after how many changes;
+\item the \emph{Birkhoff diameter} of block kernels, a numerical test of whether hidden rates in a multi-stream system are identifiable;
+\item a \emph{trigger criterion}: summable, theory-designed triggers catch only finitely many theory-fresh events.
+\end{enumerate}
+
+\paragraph{Understanding.}
+\begin{itemize}
+\item \emph{Machine learning.} The ``single scalar'' loop is a demand for a choice of linear extension. Redoable evaluation of an irreversibly learning system can only see its terminal structure. Autoregression is one linear individuation of a partially exchangeable stream, whose genuinely global parameters are the dependence graph and, under scale-free synchronization, rates.
+\item \emph{Physics.} What a relational theory can predict are invariants under individuation (structure). Evolution adds a position, which is a fact only for irreversible disturbance. Rare-event triggers designed by a theory are blind to what is fresh relative to it. Relative rates of event-synchronized clocks are emergent global parameters, present iff synchronization is scale-free.
+\item \emph{Computation.} Local mechanisms compute what the gluing parameters allow. Beyond linear time, decidability in the limit needs confluence.
+\end{itemize}
+
+\noindent Whether these quantities are useful in practice must be established by practitioners on concrete systems; the present work provides their definitions and theorems.
+
+%======================================================================
+\section{Open problems}\label{sec:open}
+\begin{enumerate}
+\item Q$^{**}$: Mathias, then random.
+\item Rigidity for fractal window profiles; this is a form of the monotonicity conjecture that shrinking windows creates no hidden parameters.
+\item The uniform cone estimate near $120^\circ$ edges, which would give rigidity for $m\ge4$ chains at comparable scales.
+\item Whether the lower bound of the amalgamation bracket is attained for general worlds.
+\item The modal logic of extension with M4 beyond the frozen and $\Sigma_1$ fragments. There is a conditional counterexample via the core model $K$ in a non-well-founded variant.
+\item Exact strength of $\Bm$; a reference for $\mathrm{S4.2}$ when width and height steps are combined.
+\item A probabilistic stabilization theorem for learning systems.
+\end{enumerate}
+
+%======================================================================
+\section{Status of the claims}\label{sec:ledger}
+
+\begin{longtable}{p{0.55\textwidth}p{0.38\textwidth}}
+\toprule
+Claim & Status\\
+\midrule\endhead
+Global/local; $\mathrm{S4.2}$; limit $T_0$ & complete (standard forcing)\\
+Strength of $\B$, $\Bp$; M4 $\Leftrightarrow\mathrm{PGA}_2$ & complete (cited)\\
+Strength of $\Bm$ & approximate\\
+Projective measurability; absorption & complete (cited techniques)\\
+Coexistence, pairing, amalgamation levels & complete\\
+Amalgamation height & complete; general case bracketed\\
+Stabilization theorems; stabilization in $\B$ & complete, Lean\\
+Probability layer & complete (cited forcing facts; partly Lean)\\
+Measure fate, window, realized extensions & complete\\
+Q$^{**}$ & open\\
+Process layer (circumstances, facts, networks, order, traces) & complete, largely Lean\\
+Hidden rates; learning & complete\\
+Rigidity: reduction, criteria, phase transition & complete (cited: local limit theorem, Karlin--Rinott, Holley)\\
+Rigidity: bottlenecks, bounded ratio, random, spikes/plateaus & complete on top of the one-dimensional lemmas\\
+Three chains, comparable scales & complete (constants at $120^\circ$ not all written)\\
+Scale separation for paths and trees & sketch\\
+$m\ge4$ chains, comparable scales & structure; one lemma missing\\
+Gluing scheme $\GLU(\pi)$; computation and processes as objects & complete, Lean\\
+Readings & known mathematics; readings are ours\\
+\bottomrule
+\end{longtable}
+
+%======================================================================
+\section{Methodology}\label{sec:method}
+
+This work was developed in about seventy iterative rounds, documented in 124 working notes. The notes are cited as \note{n} and are available on request. Each round began by checking that the step was driven by the guiding principle---dropping $\GLU_0$ and measuring its failure---rather than by translating existing theories, and ended with an explicit grading of what was proved. Finite parts are machine-checked in Lean~4 (Appendix~\ref{app:lean}). All rigidity statements were checked numerically on exact kernels, and load-bearing literature was verified at the end. Parts of the early drafts were written by the author independently. After many rounds of revision it is not clear how much of that text survives verbatim. Most of the later work was carried out in dialogue with the AI assistants Claude Opus~5 and Claude Opus~5.5 (Anthropic), which drafted proofs, Lean code and numerical experiments under the author's direction. Responsibility for all claims rests with the author.
+
+%======================================================================
+\appendix
+\section{Formalization}\label{app:lean}
+
+Two Lean~4 packages accompany the notes.
+\begin{itemize}
+\item \texttt{lean/} is mathlib-free and has 463 theorems:
+  \begin{itemize}
+  \item 240 use no axioms;
+  \item 208 use only \texttt{propext}/\texttt{Quot.sound};
+  \item 15 use choice, exactly where choice is the content.
+  \end{itemize}
+\item \texttt{lean-mathlib/} has 173 theorems.
+\end{itemize}
+
+\begin{longtable}{p{0.3\textwidth}p{0.62\textwidth}}
+\toprule
+Module & Content\\
+\midrule\endhead
+\lean{Shapes}, \lean{Kinds}, \lean{Values}, \lean{Instances}, \lean{Over}, \lean{Symmetric}, \lean{Scheme}, \lean{Contexts}, \lean{Supports} & the gluing scheme: shapes and anti-foundation, context kinds, value kinds, identity principles, choice criterion, logic by contexts\\
+\lean{Grades}, \lean{Weights}, \lean{WeightedGlue}, \lean{WeightedKind}, \lean{RandomChoice}, \lean{Socks} & value algebra forced by refinement; weights as answers; Kolmogorov localized; random choice without AC\\
+\lean{Local}, \lean{Observe}, \lean{Views}, \lean{Processes} & local computation sees objects; views; processes as objects\\
+\lean{Records}, \lean{Askable}, \lean{Sources} & records and GLU; askable $\Leftrightarrow$ measurable; records of sources\\
+\lean{Circumstances}, \lean{Individuation}, \lean{Network} & behaviours, hiding cost, facts and structure, individuation, networks, evaluation\\
+\lean{Protocols}, \lean{Exchange}, \lean{Spectrum}, \lean{Traces} & order and commutation; trace representation; PR boxes; order spectra; general independence\\
+\lean{Modal}, \lean{Worlds}, \lean{WorldsStable}, \lean{Stabilize} & $.2\Leftrightarrow$ confluence; shape of $\B$ and changing worlds; stabilization theorems\\
+\lean{Fate}, \lean{Kill}, \lean{Window} & Fubini steps of measure fate; unsplit sets kill; covering obstruction\\
+\lean{Sandwich}, \lean{Envelope}, \lean{Corner}, \lean{Closure} & three-block sandwich and corner formula; Lipschitz envelopes; exact corner martingales; plateau kernels; linear extensions; triggers\\
+\bottomrule
+\end{longtable}
+
+%======================================================================
+\begin{thebibliography}{99}\small
+\bibitem{Abramsky11} S.~Abramsky and A.~Brandenburger, The sheaf-theoretic structure of non-locality and contextuality, \emph{New J.\ Phys.}\ 13 (2011) 113036.
+\bibitem{Aczel88} P.~Aczel, \emph{Non-Well-Founded Sets}, CSLI Lecture Notes 14, Stanford, 1988.
+\bibitem{Angluin80} D.~Angluin, Local and global properties in networks of processors, in \emph{Proc.\ 12th ACM STOC} (1980) 82--93.
+\bibitem{BartoszynskiJudah95} T.~Bartoszy\'nski and H.~Judah, \emph{Set Theory: On the Structure of the Real Line}, A~K~Peters, 1995.
+\bibitem{Bell64} J.~S.~Bell, On the Einstein Podolsky Rosen paradox, \emph{Physics} 1 (1964) 195--200.
+\bibitem{Birkhoff57} G.~Birkhoff, Extensions of Jentzsch's theorem, \emph{Trans.\ Amer.\ Math.\ Soc.}\ 85 (1957) 219--227.
+\bibitem{Debreu54} G.~Debreu, Representation of a preference ordering by a numerical function, in \emph{Decision Processes}, Wiley, 1954, 159--165.
+\bibitem{deFinetti37} B.~de~Finetti, La pr\'evision: ses lois logiques, ses sources subjectives, \emph{Ann.\ Inst.\ H.\ Poincar\'e} 7 (1937) 1--68.
+\bibitem{DenisovWachtel15} D.~Denisov and V.~Wachtel, Random walks in cones, \emph{Ann.\ Probab.}\ 43 (2015) 992--1044.
+\bibitem{DiaconisFreedman80} P.~Diaconis and D.~Freedman, de~Finetti's theorem for Markov chains, \emph{Ann.\ Probab.}\ 8 (1980) 115--130.
+\bibitem{Diaconescu75} R.~Diaconescu, Axiom of choice and complementation, \emph{Proc.\ Amer.\ Math.\ Soc.}\ 51 (1975) 176--178.
+\bibitem{DiekertRozenberg95} V.~Diekert and G.~Rozenberg (eds.), \emph{The Book of Traces}, World Scientific, 1995.
+\bibitem{DowneyHirschfeldt10} R.~G.~Downey and D.~R.~Hirschfeldt, \emph{Algorithmic Randomness and Complexity}, Springer, 2010.
+\bibitem{DushnikMiller41} B.~Dushnik and E.~W.~Miller, Partially ordered sets, \emph{Amer.\ J.\ Math.}\ 63 (1941) 600--610.
+\bibitem{Ershov68} Yu.~L.~Ershov, A hierarchy of sets I, \emph{Algebra and Logic} 7 (1968) 25--43; On a hierarchy of sets II, \emph{Algebra and Logic} 7 (1968) 212--232.
+\bibitem{Ershov70} Yu.~L.~Ershov, On a hierarchy of sets III, \emph{Algebra and Logic} 9 (1970) 20--31.
+\bibitem{FMW92} Q.~Feng, M.~Magidor and W.~H.~Woodin, Universally Baire sets of reals, in \emph{Set Theory of the Continuum}, MSRI Publ.\ 26, Springer, 1992, 203--242.
+\bibitem{FKG71} C.~M.~Fortuin, P.~W.~Kasteleyn and J.~Ginibre, Correlation inequalities on some partially ordered sets, \emph{Comm.\ Math.\ Phys.}\ 22 (1971) 89--103.
+\bibitem{FHR15} G.~Fuchs, J.~D.~Hamkins and J.~Reitz, Set-theoretic geology, \emph{Ann.\ Pure Appl.\ Logic} 166 (2015) 464--501.
+\bibitem{GalvinPrikry73} F.~Galvin and K.~Prikry, Borel sets and Ramsey's theorem, \emph{J.\ Symbolic Logic} 38 (1973) 193--198.
+\bibitem{Gandy80} R.~Gandy, Church's thesis and principles for mechanisms, in \emph{The Kleene Symposium}, North-Holland, 1980, 123--148.
+\bibitem{Gold65} E.~M.~Gold, Limiting recursion, \emph{J.\ Symbolic Logic} 30 (1965) 28--48.
+\bibitem{Gold67} E.~M.~Gold, Language identification in the limit, \emph{Information and Control} 10 (1967) 447--474.
+\bibitem{HHKVW} M.~E.~Habi\v{c}, J.~D.~Hamkins, L.~D.~Klausner, J.~Verner and K.~J.~Williams, Upward closure and amalgamation in the generic multiverse of a countable model of set theory, \emph{RIMS K\^oky\^uroku} 1988 (2016); arXiv:1511.01074.
+\bibitem{Hamkins12} J.~D.~Hamkins, The set-theoretic multiverse, \emph{Rev.\ Symb.\ Logic} 5 (2012) 416--449.
+\bibitem{HamkinsLinnebo} J.~D.~Hamkins and \O.~Linnebo, The modal logic of set-theoretic potentialism and the potentialist maximality principles, \emph{Rev.\ Symb.\ Logic} 15 (2022) 1--35.
+\bibitem{HamkinsLowe08} J.~D.~Hamkins and B.~L\"owe, The modal logic of forcing, \emph{Trans.\ Amer.\ Math.\ Soc.}\ 360 (2008) 1793--1817.
+\bibitem{HamkinsWoodinUFS} J.~D.~Hamkins and W.~H.~Woodin, The universal finite set, arXiv:1711.07952.
+\bibitem{Harris60} T.~E.~Harris, A lower bound for the critical probability in a certain percolation process, \emph{Proc.\ Cambridge Philos.\ Soc.}\ 56 (1960) 13--20.
+\bibitem{Hauser95} K.~Hauser, The consistency strength of projective absoluteness, \emph{Ann.\ Pure Appl.\ Logic} 74 (1995) 245--295.
+\bibitem{Hella15} L.~Hella, M.~J\"arvisalo, A.~Kuusisto, J.~Laurinharju, T.~Lempi\"ainen, K.~Luosto, J.~Suomela and J.~Virtema, Weak models of distributed computing, with connections to modal logic, \emph{Distrib.\ Comput.}\ 28 (2015) 31--53.
+\bibitem{HewittSavage55} E.~Hewitt and L.~J.~Savage, Symmetric measures on Cartesian products, \emph{Trans.\ Amer.\ Math.\ Soc.}\ 80 (1955) 470--501.
+\bibitem{Holley74} R.~Holley, Remarks on the FKG inequalities, \emph{Comm.\ Math.\ Phys.}\ 36 (1974) 227--231.
+\bibitem{HrusakMinami14} M.~Hru\v{s}\'ak and H.~Minami, Mathias--Prikry and Laver--Prikry type forcing, \emph{Ann.\ Pure Appl.\ Logic} 165 (2014) 880--894.
+\bibitem{ItaiRodeh90} A.~Itai and M.~Rodeh, Symmetry breaking in distributed networks, \emph{Inform.\ and Comput.}\ 88 (1990) 60--87.
+\bibitem{Jech03} T.~Jech, \emph{Set Theory}, third millennium edition, Springer, 2003.
+\bibitem{Kakutani48} S.~Kakutani, On equivalence of infinite product measures, \emph{Ann.\ of Math.}\ 49 (1948) 214--224.
+\bibitem{KakutaniOxtoby50} S.~Kakutani and J.~C.~Oxtoby, Construction of a non-separable invariant extension of the Lebesgue measure space, \emph{Ann.\ of Math.}\ 52 (1950) 580--590.
+\bibitem{Kanamori03} A.~Kanamori, \emph{The Higher Infinite}, 2nd edition, Springer, 2003.
+\bibitem{KarlinRinott80} S.~Karlin and Y.~Rinott, Classes of orderings of measures and related correlation inequalities I: Multivariate totally positive distributions, \emph{J.\ Multivariate Anal.}\ 10 (1980) 467--498.
+\bibitem{Kolmogorov33} A.~N.~Kolmogorov, \emph{Grundbegriffe der Wahrscheinlichkeitsrechnung}, Springer, 1933.
+\bibitem{KOR02} W.~K\"onig, N.~O'Connell and S.~Roch, Non-colliding random walks, tandem queues, and discrete orthogonal polynomial ensembles, \emph{Electron.\ J.\ Probab.}\ 7 (2002), no.~5, 1--24.
+\bibitem{LarsenSkou91} K.~G.~Larsen and A.~Skou, Bisimulation through probabilistic testing, \emph{Inform.\ and Comput.}\ 94 (1991) 1--28.
+\bibitem{Larson04} P.~B.~Larson, \emph{The Stationary Tower: Notes on a Course by W.~Hugh Woodin}, University Lecture Series 32, Amer.\ Math.\ Soc., 2004.
+\bibitem{Laver07} R.~Laver, Certain very large cardinals are not created in small forcing extensions, \emph{Ann.\ Pure Appl.\ Logic} 149 (2007) 1--6.
+\bibitem{Mathias77} A.~R.~D.~Mathias, Happy families, \emph{Ann.\ Math.\ Logic} 12 (1977) 59--111.
+\bibitem{Mazurkiewicz77} A.~Mazurkiewicz, Concurrent program schemes and their interpretations, DAIMI Report PB-78, Aarhus University, 1977.
+\bibitem{Myhill57} J.~Myhill, Finite automata and the representation of events, WADD Technical Report 57-624, Wright-Patterson AFB, 1957, 112--137.
+\bibitem{Nerode58} A.~Nerode, Linear automaton transformations, \emph{Proc.\ Amer.\ Math.\ Soc.}\ 9 (1958) 541--544.
+\bibitem{Pawlikowski86} J.~Pawlikowski, Why Solovay real produces Cohen real, \emph{J.\ Symbolic Logic} 51 (1986) 957--968.
+\bibitem{Petrov75} V.~V.~Petrov, \emph{Sums of Independent Random Variables}, Springer, 1975.
+\bibitem{PopescuRohrlich94} S.~Popescu and D.~Rohrlich, Quantum nonlocality as an axiom, \emph{Found.\ Phys.}\ 24 (1994) 379--385.
+\bibitem{Putnam65} H.~Putnam, Trial and error predicates and the solution to a problem of Mostowski, \emph{J.\ Symbolic Logic} 30 (1965) 49--57.
+\bibitem{Shoenfield59} J.~R.~Shoenfield, On degrees of unsolvability, \emph{Ann.\ of Math.}\ 69 (1959) 644--653.
+\bibitem{Shoenfield61} J.~R.~Shoenfield, The problem of predicativity, in \emph{Essays on the Foundations of Mathematics}, Magnes Press, Jerusalem, 1961, 132--139.
+\bibitem{Solovay70} R.~M.~Solovay, A model of set theory in which every set of reals is Lebesgue measurable, \emph{Ann.\ of Math.}\ 92 (1970) 1--56.
+\bibitem{Steel04} J.~R.~Steel, Generic absoluteness and the continuum problem, lecture notes, Laguna Workshop on Philosophy and the Continuum Problem, March 2004.
+\bibitem{Szpilrajn30} E.~Szpilrajn, Sur l'extension de l'ordre partiel, \emph{Fund.\ Math.}\ 16 (1930) 386--389.
+\bibitem{Szpilrajn35} E.~Szpilrajn, Sur l'extension de la mesure lebesguienne, \emph{Fund.\ Math.}\ 25 (1935) 551--558.
+\bibitem{Talagrand80} M.~Talagrand, Compacts de fonctions mesurables et filtres non mesurables, \emph{Studia Math.}\ 67 (1980) 13--43.
+\bibitem{Wilson17} T.~M.~Wilson, Universally Baire sets and generic absoluteness, \emph{J.\ Symbolic Logic} 82 (2017) 1229--1251.
+\bibitem{Wilson18} T.~M.~Wilson, On forcing projective generic absoluteness from strong cardinals, arXiv:1807.02206, 2018.
+\bibitem{YamashitaKameda96} M.~Yamashita and T.~Kameda, Computing on anonymous networks: Part I---characterizing the solvable cases, \emph{IEEE Trans.\ Parallel Distrib.\ Syst.}\ 7 (1996) 69--89.
+\bibitem{Zielonka87} W.~Zielonka, Notes on finite asynchronous automata, \emph{RAIRO Inform.\ Th\'eor.\ Appl.}\ 21 (1987) 99--135.
+\end{thebibliography}
+
+\end{document}
